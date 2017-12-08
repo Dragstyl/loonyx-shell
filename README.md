@@ -1,6 +1,6 @@
-#H1 LOONYX SHELL
+# LOONYX SHELL
 Some random shell attempt.
 Currently only working commands are:
-..* clear
-..* cat [FILE]
-..* exit
+* clear
+* cat [FILE]
+* exit
