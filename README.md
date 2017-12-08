@@ -1,5 +1,5 @@
 # LOONYX SHELL
-Some random shell attempt.
+Some lazy shell attempt, project.
 Currently only working commands are:
 * clear
 * cat [FILE]
