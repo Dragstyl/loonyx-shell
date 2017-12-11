@@ -6,11 +6,6 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 
-/*char toArguments(char *command) {
-	char *arguments;
-	arguments = strtok(command, " ");
-	return *arguments;
-}*/
 void cat(char *command[]) {
 	FILE *readfile;
 	int characters;
@@ -24,18 +19,13 @@ void cat(char *command[]) {
 	}
 
 }
-void wordCount(char *command[]) {
-
-}
-void changeDirectory(char *command[]) {
-
-}
-
+void wordCount(char *command[]);
+void changeDirectory(char *command[]);
 void runCommand(char *command[]) {
 	if(strcmp(command[0], "exit") == 0)
 		exit(0);
 	else if(strcmp(command[0], "clear") == 0)
-        system("clear");
+		system("clear");
     else if(strcmp(command[0], "wc") == 0)
 		wordCount(command);
 	else if(strcmp(command[0], "cat") == 0)
@@ -48,14 +38,15 @@ void runCommand(char *command[]) {
 
 int main(int argc, char *argv[]) {
 	int no_of_args;
-	char *line;    
-	char *itr; int iterat = 0;
+	char *line;
+	char *itr;
+	int iterat = 0;
 	char *command[255];
-	
-    while(1) {
+
+	while(1) {
         
 	/* Displaying prompt and accepting command */
-    line = readline("$>");
+	line = readline("$>");
 	
 	/* Turn command into a list of arguments */
 	itr = strtok(line, " ");
@@ -70,9 +61,6 @@ int main(int argc, char *argv[]) {
 	
 	/* Adding history support with up and down */
 	add_history(line);
-	
     }
     return 0;
 }
-
-
