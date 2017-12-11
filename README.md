@@ -3,4 +3,5 @@ Some lazy shell attempt, project.
 Currently only working commands are:
 * clear
 * cat [FILE]
+* wc [FILE]
 * exit
