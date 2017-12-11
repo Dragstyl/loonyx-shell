@@ -19,20 +19,23 @@ void cat(char *command[]) {
 	}
 
 }
+
 void wordCount(char *command[]);
+
 void changeDirectory(char *command[]);
+
 void runCommand(char *command[]) {
 	if(strcmp(command[0], "exit") == 0)
 		exit(0);
 	else if(strcmp(command[0], "clear") == 0)
 		system("clear");
-    else if(strcmp(command[0], "wc") == 0)
+	else if(strcmp(command[0], "wc") == 0)
 		wordCount(command);
 	else if(strcmp(command[0], "cat") == 0)
 		cat(command);
 	else if(strcmp(command[0], "cd") == 0)
 		changeDirectory(command);
-    else
+	else
 		printf("Unknown command\n");
 }
 
