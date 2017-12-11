@@ -20,9 +20,22 @@ void cat(char *command[]) {
 
 }
 
-void wordCount(char *command[]);
+void wordCount(char *command[]) {
+	FILE *readfile;
+	int characters;
+	int words = 0;
+	readfile = fopen(command[1], "r");
+	if(readfile) {
+		while((characters = getc(readfile)) != EOF) {
+			if(characters == ' ' || characters == '\n' || characters == '\0')
+				words++;
+		}
+	}
 
-void changeDirectory(char *command[]);
+	printf("%d\n", words);
+}
+
+void changeDirectory(char *command[]){};
 
 void runCommand(char *command[]) {
 	if(strcmp(command[0], "exit") == 0)
@@ -50,7 +63,8 @@ int main(int argc, char *argv[]) {
         
 	/* Displaying prompt and accepting command */
 	line = readline("$>");
-	
+	/* Adding history support with up and down */
+	add_history(line);
 	/* Turn command into a list of arguments */
 	itr = strtok(line, " ");
 	while(itr != NULL) {
@@ -61,9 +75,6 @@ int main(int argc, char *argv[]) {
 	
 	/* Run command */
 	runCommand(command);
-	
-	/* Adding history support with up and down */
-	add_history(line);
     }
     return 0;
 }
