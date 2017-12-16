@@ -4,4 +4,5 @@ Currently only working commands are:
 * clear
 * cat [FILE]
 * wc [FILE]
+* cd [DIRECTORY]
 * exit
