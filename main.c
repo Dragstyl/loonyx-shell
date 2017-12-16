@@ -24,22 +24,63 @@ void tee(char *command[]) {
 
 }
 
+void list(char *command[]) {
+
+}
+
 void wordCount(char *command[]) {
 	FILE *readfile;
 	int characters;
 	int words = 0;
-	if(!(readfile = fopen(command[1], "r"))) {
-		printf("Filename invalid\n");
-		exit(1);
+	int lines = 0;
+	int longest = 0;
+	if(command[1] == NULL) {
+		printf("No parameter specified\n");
+		return;
 	}
-	if(readfile) {
-		while((characters = getc(readfile)) != EOF) {
-			if(characters == ' ' || characters == '\n' || characters == '\0')
-				words++;
+	/* Line count */
+	else if(strcmp(command[1], "-l") == 0) {
+		if(!(readfile = fopen(command[2], "r"))) {
+			printf("Filename invalid\n");
+			return;
 		}
+		if(readfile) {
+			while((characters = getc(readfile)) != EOF) {
+				if(characters == '\n' || characters == '\0')
+					lines++;
+			}
+		}
+		printf("%d\n", lines);
+		return;
+	}
+	/* Word Count */
+	else if(strcmp(command[1], "-w") == 0) {
+		if(!(readfile = fopen(command[2], "r"))) {
+			printf("Filename invalid\n");
+			return;
+		}
+		if(readfile) {
+			while((characters = getc(readfile)) != EOF) {
+				if(characters == ' ' || characters == '\n' || characters == '\0')
+					words++;
+			}
+		}
+		printf("%d\n", words);
+		return;
+	}
+	/* Byte Count */
+	else if(strcmp(command[1], "-c") == 0) {
+
+	}
+	/* Longest Line */
+	else if(strcmp(command[1], "-L") == 0) {
+
 	}
 
-	printf("%d\n", words);
+	else {
+		printf("Something went wrong, possible wrong parameter. See \"man wc\"\n");
+		return;
+	}
 }
 
 void changeDirectory(char *command[]){
@@ -55,7 +96,7 @@ void changeDirectory(char *command[]){
 	else {
 		chdir(command[1]);
 	}
-};
+}
 
 void runCommand(char *command[]) {
 	if(strcmp(command[0], "exit") == 0)
@@ -68,6 +109,10 @@ void runCommand(char *command[]) {
 		cat(command);
 	else if(strcmp(command[0], "cd") == 0)
 		changeDirectory(command);
+	else if(strcmp(command[0], "tee") == 0)
+		tee(command);
+	else if(strcmp(command[0], "ls") == 0)
+		list(command);
 	else
 		printf("Unknown command\n");
 }
@@ -87,7 +132,7 @@ int main(int argc, char *argv[]) {
 
 	/* Reset command */
 	memset(command, '\0', 255);
-	
+
 	/* Turn command into a list of arguments */
 	itr = strtok(line, " ");
 	while(itr != NULL) {
