@@ -20,11 +20,18 @@ void cat(char *command[]) {
 
 }
 
+void tee(char *command[]) {
+
+}
+
 void wordCount(char *command[]) {
 	FILE *readfile;
 	int characters;
 	int words = 0;
-	readfile = fopen(command[1], "r");
+	if(!(readfile = fopen(command[1], "r"))) {
+		printf("Filename invalid\n");
+		exit(1);
+	}
 	if(readfile) {
 		while((characters = getc(readfile)) != EOF) {
 			if(characters == ' ' || characters == '\n' || characters == '\0')
@@ -35,7 +42,20 @@ void wordCount(char *command[]) {
 	printf("%d\n", words);
 }
 
-void changeDirectory(char *command[]){};
+void changeDirectory(char *command[]){
+	if(command[1] == NULL){
+		printf("No directory specified\n");
+	}
+	else if(strcmp(command[1], "..") == 0){
+		chdir("..");
+	}
+	else if(chdir(command[1]) == -1) {
+		printf("Directory doesn't exist or unknown error\n");
+	}
+	else {
+		chdir(command[1]);
+	}
+};
 
 void runCommand(char *command[]) {
 	if(strcmp(command[0], "exit") == 0)
@@ -53,7 +73,6 @@ void runCommand(char *command[]) {
 }
 
 int main(int argc, char *argv[]) {
-	int no_of_args;
 	char *line;
 	char *itr;
 	int iterat = 0;
@@ -65,6 +84,10 @@ int main(int argc, char *argv[]) {
 	line = readline("$>");
 	/* Adding history support with up and down */
 	add_history(line);
+
+	/* Reset command */
+	memset(command, '\0', 255);
+	
 	/* Turn command into a list of arguments */
 	itr = strtok(line, " ");
 	while(itr != NULL) {
