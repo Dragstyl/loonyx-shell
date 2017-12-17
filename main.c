@@ -9,7 +9,6 @@
 void cat(char *command[]) {
 	FILE *readfile;
 	int characters;
-
 	readfile = fopen(command[1], "r");
 	if(readfile) {
 		while((characters = getc(readfile)) != EOF)
@@ -21,7 +20,33 @@ void cat(char *command[]) {
 }
 
 void tee(char *command[]) {
+	FILE *readfile;
+	char *string;
+	if(command[1] == NULL) {
+		printf("No parameters specified\n");
+		return;
+	}
+	else if(strcmp(command[1], "-a") == 0) {
+		strcpy(string, *command+3);
+		if(!(readfile = fopen(command[2], "a"))) {
+			printf("Error opening file or filename invalid\n");
+			return;
+		}
+		if(readfile) {
+			fprintf(readfile, "%s", string);
+			fclose(readfile);
+		}
+	}
+	else {
+		if(!(readfile = fopen(command[1], "w"))) {
+			printf("Error\n");
+			return;
+		}
+		if(readfile) {
+			strcpy(string, *command+2);
 
+		}
+	}
 }
 
 void list(char *command[]) {
@@ -51,6 +76,8 @@ void wordCount(char *command[]) {
 			}
 		}
 		printf("%d\n", lines);
+		fclose(readfile);
+
 		return;
 	}
 	/* Word Count */
@@ -66,15 +93,27 @@ void wordCount(char *command[]) {
 			}
 		}
 		printf("%d\n", words);
+		fclose(readfile);
 		return;
 	}
 	/* Byte Count */
 	else if(strcmp(command[1], "-c") == 0) {
-
+		
 	}
 	/* Longest Line */
 	else if(strcmp(command[1], "-L") == 0) {
+		if(!(readfile = fopen(command[2], "r"))) {
+			printf("Filename invalid\n");
+			return;
+		}
+		if(readfile) {
+			while((characters = getc(readfile)) != EOF) {
+				if(characters == '\n'){
 
+				}
+					
+			}
+		}
 	}
 
 	else {
@@ -130,7 +169,7 @@ int main(int argc, char *argv[]) {
 	/* Adding history support with up and down */
 	add_history(line);
 
-	/* Reset command */
+	/* Initalize or reset command */
 	memset(command, '\0', 255);
 
 	/* Turn command into a list of arguments */
@@ -143,6 +182,7 @@ int main(int argc, char *argv[]) {
 	
 	/* Run command */
 	runCommand(command);
-    }
+	}
+	
     return 0;
 }
