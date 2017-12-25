@@ -59,6 +59,7 @@ void wordCount(char *command[]) {
 	int words = 0;
 	int lines = 0;
 	int longest = 0;
+	int bytes = 0;
 	if(command[1] == NULL) {
 		printf("No parameter specified\n");
 		return;
@@ -88,7 +89,7 @@ void wordCount(char *command[]) {
 		}
 		if(readfile) {
 			while((characters = getc(readfile)) != EOF) {
-				if(characters == ' ' || characters == '\n' || characters == '\0')
+				if(characters == ' ' || characters == '\n' || characters == '\0' || characters == EOF)
 					words++;
 			}
 		}
@@ -98,22 +99,43 @@ void wordCount(char *command[]) {
 	}
 	/* Byte Count */
 	else if(strcmp(command[1], "-c") == 0) {
-		
-	}
-	/* Longest Line */
-	else if(strcmp(command[1], "-L") == 0) {
 		if(!(readfile = fopen(command[2], "r"))) {
 			printf("Filename invalid\n");
 			return;
 		}
 		if(readfile) {
 			while((characters = getc(readfile)) != EOF) {
-				if(characters == '\n'){
-
+				bytes++;
 				}
-					
+		}
+		printf("%d\n", bytes);
+		fclose(readfile);
+	}
+	/* Longest Line */
+	else if(strcmp(command[1], "-L") == 0) {
+		int max = 0;
+		int line = 0;
+		int longest_line = 0;
+		if(!(readfile = fopen(command[2], "r"))) {
+			printf("Filename invalid\n");
+			return;
+		}
+		if(readfile) {
+			while((characters = getc(readfile)) != EOF) {
+				max++;
+				if(characters == '\n' || characters == EOF){
+					if(longest < max){
+						longest = max;
+						longest_line = line;
+						max = 0;
+					}
+					line++;
+				}
+
 			}
 		}
+		printf("%d\n", longest_line+1);
+		fclose(readfile);
 	}
 
 	else {
@@ -163,7 +185,7 @@ int main(int argc, char *argv[]) {
 	char *command[255];
 
 	while(1) {
-        
+
 	/* Displaying prompt and accepting command */
 	line = readline("$>");
 	/* Adding history support with up and down */
@@ -179,10 +201,10 @@ int main(int argc, char *argv[]) {
 		itr = strtok(NULL, " ");
 	}
 	iterat = 0;
-	
+
 	/* Run command */
 	runCommand(command);
 	}
-	
+
     return 0;
 }
