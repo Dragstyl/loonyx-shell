@@ -27,7 +27,7 @@ void tee(char *command[]) {
 		return;
 	}
 	else if(strcmp(command[1], "-a") == 0) {
-		strcpy(string, *command+3);
+		strcpy(string, *command+4);
 		if(!(readfile = fopen(command[2], "a"))) {
 			printf("Error opening file or filename invalid\n");
 			return;
