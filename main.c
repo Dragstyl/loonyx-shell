@@ -5,7 +5,44 @@
 #include <fcntl.h>
 #include <readline/readline.h>
 #include <readline/history.h>
-
+void version(){
+	printf("Version: 0.0.1\nAuthor:Milan Modrigan\n");
+}
+void man(char *command[]) {
+	if(command[1] == NULL){
+		printf("No command specified. Use man [COMMAND]\nPossible commands: cat, wc, cd, clear, exit, tee, ls, man, version\n");
+	}
+	else if(strcmp(command[1], "cat") == 0){
+		printf("Usage: cat [FILE]\nPrints content of file in terminal.\n");
+	}
+	else if(strcmp(command[1], "wc") == 0){
+		printf("Usage: wc [ARGS] [FILE]\nArguments:\n\t-l   prints the number of lines\n\t-w   prints the number of words\n\t-c   prints the number of bytes\n\t-L   prints the longest line\n");
+	}
+	else if(strcmp(command[1], "cd") == 0){
+		printf("Usage: cd [DIR]\nChanges working directory to the one specified.\nUse \"..\" to go back a directory.\n");
+	}
+	else if(strcmp(command[1], "clear") == 0){
+		printf("Clears the shell\n");
+	}
+	else if(strcmp(command[1], "exit") == 0){
+		printf("Exits shell with return of 0.\n");
+	}
+	else if(strcmp(command[1], "tee") == 0){
+		printf("Usage: tee [ARGS] [FILE] [TEXT]\nWrites text to file.\n\t-a   Appends text to file.\n");
+	}
+	else if(strcmp(command[1], "ls") == 0){
+		printf("Usage: ls [ARGS]\nLists the content of current working directory.\nOptional arguments:\n");
+	}
+	else if(strcmp(command[1], "man") == 0){
+		printf("Just write it once.\n");
+	}
+	else if(strcmp(command[1], "version") == 0){
+		printf("Prints version, author\n");
+	}
+	else{
+		printf("Command unknown. Possible commands: cat, wc, cd, clear, exit, tee, ls\n");
+	}
+}
 void cat(char *command[]) {
 	FILE *readfile;
 	int characters;
@@ -16,9 +53,7 @@ void cat(char *command[]) {
 		fclose(readfile);
 		printf("\n");
 	}
-
 }
-
 void tee(char *command[]) {
 	FILE *readfile;
 	char *string;
@@ -27,7 +62,6 @@ void tee(char *command[]) {
 		return;
 	}
 	else if(strcmp(command[1], "-a") == 0) {
-		strcpy(string, *command+4);
 		if(!(readfile = fopen(command[2], "a"))) {
 			printf("Error opening file or filename invalid\n");
 			return;
@@ -38,21 +72,18 @@ void tee(char *command[]) {
 		}
 	}
 	else {
-		if(!(readfile = fopen(command[1], "w"))) {
+		if(!(readfile = fopen(command[1], "a"))) {
 			printf("Error\n");
 			return;
 		}
 		if(readfile) {
 			strcpy(string, *command+2);
-
 		}
 	}
 }
-
 void list(char *command[]) {
 
 }
-
 void wordCount(char *command[]) {
 	FILE *readfile;
 	int characters;
@@ -78,7 +109,6 @@ void wordCount(char *command[]) {
 		}
 		printf("%d\n", lines);
 		fclose(readfile);
-
 		return;
 	}
 	/* Word Count */
@@ -131,19 +161,16 @@ void wordCount(char *command[]) {
 					}
 					line++;
 				}
-
 			}
 		}
 		printf("%d\n", longest_line+1);
 		fclose(readfile);
 	}
-
 	else {
 		printf("Something went wrong, possible wrong parameter. See \"man wc\"\n");
 		return;
 	}
 }
-
 void changeDirectory(char *command[]){
 	if(command[1] == NULL){
 		printf("No directory specified\n");
@@ -158,7 +185,6 @@ void changeDirectory(char *command[]){
 		chdir(command[1]);
 	}
 }
-
 void runCommand(char *command[]) {
 	if(strcmp(command[0], "exit") == 0)
 		exit(0);
@@ -174,10 +200,13 @@ void runCommand(char *command[]) {
 		tee(command);
 	else if(strcmp(command[0], "ls") == 0)
 		list(command);
+	else if(strcmp(command[0], "man") == 0)
+		man(command);
+	else if(strcmp(command[0], "version") == 0)
+		version();
 	else
 		printf("Unknown command\n");
 }
-
 int main(int argc, char *argv[]) {
 	char *line;
 	char *itr;
@@ -185,26 +214,21 @@ int main(int argc, char *argv[]) {
 	char *command[255];
 
 	while(1) {
-
-	/* Displaying prompt and accepting command */
-	line = readline("$>");
-	/* Adding history support with up and down */
-	add_history(line);
-
-	/* Initalize or reset command */
-	memset(command, '\0', 255);
-
-	/* Turn command into a list of arguments */
-	itr = strtok(line, " ");
-	while(itr != NULL) {
-		command[iterat++] = itr;
-		itr = strtok(NULL, " ");
+		/* Displaying prompt and accepting command */
+		line = readline("$>");
+		/* Adding history support with up and down */
+		add_history(line);
+		/* Initalize or reset command */
+		memset(command, '\0', 255);
+		/* Turn command into a list of arguments */
+		itr = strtok(line, " ");
+		while(itr != NULL) {
+			command[iterat++] = itr;
+			itr = strtok(NULL, " ");
+		}
+		iterat = 0;
+		/* Run command */
+		runCommand(command);
 	}
-	iterat = 0;
-
-	/* Run command */
-	runCommand(command);
-	}
-
-    return 0;
+	return 0;
 }
