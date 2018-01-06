@@ -5,10 +5,14 @@
 #include <fcntl.h>
 #include <readline/readline.h>
 #include <readline/history.h>
+
+#define MAX_SIZE 255
+
 void version(){
 	printf("Version: 0.0.1\nAuthor:Milan Modrigan\n");
 }
-void man(char *command[]) {
+
+void man(char **command) {
 	if(command[1] == NULL){
 		printf("No command specified. Use man [COMMAND]\nPossible commands: cat, wc, cd, clear, exit, tee, ls, man, version\n");
 	}
@@ -43,7 +47,18 @@ void man(char *command[]) {
 		printf("Command unknown. Possible commands: cat, wc, cd, clear, exit, tee, ls\n");
 	}
 }
-void cat(char *command[]) {
+
+void test(char **command){
+	char* string;
+	int i = 0;
+	while(command[i] != '\0'){
+		strcpy(string, command[i]);
+	}
+
+	printf("%s\n", string);
+}
+
+void cat(char **command) {
 	FILE *readfile;
 	int characters;
 	readfile = fopen(command[1], "r");
@@ -54,7 +69,7 @@ void cat(char *command[]) {
 		printf("\n");
 	}
 }
-void tee(char *command[]) {
+void tee(char **command) {
 	FILE *readfile;
 	char *string;
 	if(command[1] == NULL) {
@@ -71,20 +86,11 @@ void tee(char *command[]) {
 			fclose(readfile);
 		}
 	}
-	else {
-		if(!(readfile = fopen(command[1], "a"))) {
-			printf("Error\n");
-			return;
-		}
-		if(readfile) {
-			strcpy(string, *command+2);
-		}
-	}
 }
-void list(char *command[]) {
+void list(char **command) {
 
 }
-void wordCount(char *command[]) {
+void wordCount(char **command) {
 	FILE *readfile;
 	int characters;
 	int words = 0;
@@ -211,7 +217,7 @@ int main(int argc, char *argv[]) {
 	char *line;
 	char *itr;
 	int iterat = 0;
-	char *command[255];
+	char *command[MAX_SIZE]; /* = (char**) malloc(MAX_SIZE * sizeof(char*)); */
 
 	while(1) {
 		/* Displaying prompt and accepting command */
@@ -228,6 +234,7 @@ int main(int argc, char *argv[]) {
 		}
 		iterat = 0;
 		/* Run command */
+		/* test(command); */
 		runCommand(command);
 	}
 	return 0;
