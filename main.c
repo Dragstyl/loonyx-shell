@@ -191,11 +191,17 @@ void changeDirectory(char *command[]){
 		chdir(command[1]);
 	}
 }
+
+void clear(){
+	for(int i = 0; i < 80; i++)
+		printf("\n");
+}
+
 void runCommand(char *command[]) {
 	if(strcmp(command[0], "exit") == 0)
 		exit(0);
 	else if(strcmp(command[0], "clear") == 0)
-		system("clear");
+		clear();
 	else if(strcmp(command[0], "wc") == 0)
 		wordCount(command);
 	else if(strcmp(command[0], "cat") == 0)
